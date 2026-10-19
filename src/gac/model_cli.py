@@ -82,30 +82,30 @@ def _load_existing_env() -> dict[str, str]:
 def _configure_model(existing_env: dict[str, str]) -> bool:
     """Run the provider/model/API key configuration flow."""
     providers = [
-        ("Anthropic", "claude-haiku-4-5"),
-        ("Azure OpenAI", "gpt-5.6-luna"),
+        ("Anthropic", "claude-haiku-5-5"),
+        ("Azure OpenAI", "gpt-6-luna"),
         ("Cerebras", "zai-glm-4.7"),
-        ("ChatGPT (OAuth)", "gpt-5.6-luna"),
-        ("Chutes", "zai-org/GLM-5-TEE"),
+        ("ChatGPT (OAuth)", "gpt-6-luna"),
+        ("Chutes", "deepseek-ai/DeepSeek-V4-Flash-0731-TEE"),
         ("Claude Code (OAuth)", "claude-sonnet-5"),
         ("Crof.ai", "kimi-k2.5-lightning"),
         ("Custom (Anthropic)", ""),
         ("Custom (OpenAI)", ""),
         ("DeepInfra", "Qwen/Qwen3.6-35B-A3B"),
         ("DeepSeek", "deepseek-flash"),
-        ("Fireworks", "fireworks/glm-5p1"),
+        ("Fireworks", "accounts/fireworks/models/glm-5p3-flash"),
         ("Gemini", "gemini-3.5-flash-lite"),
-        ("GitHub Copilot (OAuth)", "gpt-5.6-luna"),
+        ("GitHub Copilot (OAuth)", "gpt-6-luna"),
         ("Groq", "openai/gpt-oss-120b"),
         ("Kimi for Coding", "kimi-for-coding"),
         ("LM Studio", "gemma4"),
-        ("MiniMax.io", "MiniMax-M3"),
-        ("Mistral", "devstral-2512"),
+        ("MiniMax.io", "MiniMax-M3.1-Flash"),
+        ("Mistral", "mistral-large-4"),
         ("Moonshot AI", "kimi-k3"),
-        ("Neuralwatt", "qwen3.6-35b-fast"),
+        ("Neuralwatt", "glm-5.3-flash"),
         ("Ollama", "gemma4"),
         ("Ollama Cloud", "gpt-oss:120b-cloud"),
-        ("OpenAI", "gpt-5.6-luna"),
+        ("OpenAI", "gpt-6-luna"),
         ("OpenCode Go", "deepseek-flash"),
         ("OpenRouter", "openrouter/auto"),
         ("Plexus Gateway", ""),
@@ -115,7 +115,7 @@ def _configure_model(existing_env: dict[str, str]) -> bool:
         ("Streamlake", ""),
         ("Synthetic.new", "syn:large:text"),
         ("Together AI", "openai/gpt-oss-120B"),
-        ("Wafer.ai", "Qwen3.5-397B-A17B"),
+        ("Wafer.ai", "GLM-5.3-Flash"),
         ("Z.AI", "glm-5.3"),
     ]
     provider_names = [p[0] for p in providers]
@@ -127,7 +127,11 @@ def _configure_model(existing_env: dict[str, str]) -> bool:
     )
     click.echo()
     provider = questionary.select(
-        "Select your provider:", choices=provider_names, use_shortcuts=True, use_arrow_keys=True, use_jk_keys=False
+        "Select your provider:",
+        choices=provider_names,
+        use_shortcuts=True,
+        use_arrow_keys=True,
+        use_jk_keys=False,
     ).ask()
     if not provider:
         click.echo("Provider selection cancelled. Exiting.")
@@ -224,7 +228,8 @@ def _configure_model(existing_env: dict[str, str]) -> bool:
         click.echo(f"Set CUSTOM_ANTHROPIC_BASE_URL={base_url}")
 
         api_version = questionary.text(
-            "Enter the API version (optional, press Enter for default: 2023-06-01):", default="2023-06-01"
+            "Enter the API version (optional, press Enter for default: 2023-06-01):",
+            default="2023-06-01",
         ).ask()
         if api_version and api_version != "2023-06-01":
             set_key(str(GAC_ENV_PATH), "CUSTOM_ANTHROPIC_VERSION", api_version)
@@ -294,7 +299,8 @@ def _configure_model(existing_env: dict[str, str]) -> bool:
                 click.echo(f"Keeping existing AZURE_OPENAI_API_VERSION={api_version}")
         else:
             api_version = questionary.text(
-                "Enter the Azure OpenAI API version (required, e.g., 2025-01-01-preview):", default="2025-01-01-preview"
+                "Enter the Azure OpenAI API version (required, e.g., 2025-01-01-preview):",
+                default="2025-01-01-preview",
             ).ask()
             if api_version is None or not api_version.strip():
                 click.echo("Azure OpenAI API version entry cancelled. Exiting.")
